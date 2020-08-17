@@ -3,6 +3,6 @@
 <p><%= homeContent %></p>
 <% for (entry of entries) { %> 
     <h1> <%= entry.title %> </h1>
-    <p> <%= entry.postBody %> </p>
+    <p> <%= entry.postBody.slice(0, 100) %> ... <a href="/posts/<%= lod.lowerCase(entry.title) %> ">Read More</a></p>
 <% } %> 
 <%- include('partials/footer') %>

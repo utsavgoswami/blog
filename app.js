@@ -3,6 +3,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+
+// Lodash Stuff
+// Load the full build.
+const _ = require('lodash');
+
+// Load the FP build for immutable auto-curried iteratee-first data-last methods.
+const fp = require('lodash/fp');
+ 
+// Load method categories.
+const array = require('lodash/array');
+const object = require('lodash/fp/object');
+ 
+// Cherry-pick methods for smaller browserify/rollup/webpack bundles.
+const at = require('lodash/at');
+const curryN = require('lodash/fp/curryN');
+
 const port = 3001;
 const entries = [];
 
@@ -20,7 +36,8 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   res.render("home", {
     homeContent: homeStartingContent,
-    entries: entries
+    entries: entries,
+    lod: _
   });
 });
 
@@ -54,13 +71,32 @@ app.post("/compose", (req, res) => {
 });
 
 app.get("/posts/:postTitle", (req, res) => {
-  postTitle = req.params.postTitle;
+  const postTitle = _.lowerCase(req.params.postTitle);
+
+  let title = "Error";
+  let content = "No post of this title currently exists on this blog!";
 
   for (entry of entries) {
-    if (entry.title === postTitle) {
-      console.log("Match Found!");
+    const entryTitle = _.lowerCase(entry.title);
+    if (entryTitle === postTitle) {
+      // res.render("post", {
+      //   title: entry.title,
+      //   content: entry.postBody,
+      // })
+      title = entry.title;
+      content = entry.postBody;
     }
   }
+
+  res.render("post", {
+    title: title,
+    content: content    
+  });
+
+  // res.render("post", {
+  //   title: "Error",
+  //   content: "No post of this title currently exists on this blog!"
+  // });
 })
 
 app.listen(port, () => console.log("Server started on port", port));

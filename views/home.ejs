@@ -1,4 +1,8 @@
 <%- include('partials/header') %>
 <h1>Home</h1>
 <p><%= homeContent %></p>
+<% for (entry of entries) { %> 
+    <h1> <%= entry.title %> </h1>
+    <p> <%= entry.postBody %> </p>
+<% } %> 
 <%- include('partials/footer') %>
